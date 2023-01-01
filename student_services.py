@@ -378,11 +378,11 @@ def didaskalies(user):
             break
         if event == "-data-":
             etos=(values["-data-"][0])
-            window_didaskalias(etos)
+            window_didaskalias(user, etos)
     windowdidaskalies.close()
     conn.close()
 
-def window_didaskalias(etos):
+def window_didaskalias(user,etos):
     conn=sqlite3.connect("student_services.db")
     c=conn.cursor()
     c.execute('''SELECT DISTINCT "Όνομα", ΜΑΘΗΜΑ."Κωδικός"
@@ -395,13 +395,40 @@ def window_didaskalias(etos):
         c.append([data[i][0],data[i][1]])
     data=c
     headings = ["Όνομα", "Κωδικός Μαθήματος"]
-    layout = [[sg.Table(values=data, headings=headings,
-                        justification='center',
-                        num_rows=15,
-                        key='-TABLE-',
-                        enable_events=True,
-                        enable_click_events=True)],
-              [sg.Button("Exit", key="-exit-")]]
+    if user==3:
+        layout = [[sg.Text("Επέλεξε μία διδασκαλία για να την επεξεργαστείς:"),
+            ,sg.Table(values=data, headings=headings,
+                            justification='center',
+                            num_rows=15,
+                            key='-TABLE-',
+                            enable_events=True,
+                            enable_click_events=True)],
+                  [sg.Button("Exit", key="-exit-")]]
+        windowdidaskalies = sg.Window("Μαθήματα που διδάχθηκαν", layout)
+        while True:
+            event, values = windowdidaskalies.read()
+            try:
+                if event == "-exit-" or event == sg.WIN_CLOSED:
+                    break
+                elif event[0] =='-TABLE-':
+                        seira=data[event[2][0]]
+                        selected_id=seira[0]
+                        click_didaskalia(user,selected_id)
+                        windowdidaskalies.close()
+                        didaskalies(user)
+            except TypeError:
+                newevent, newvalues = sg.Window('Message Window',
+                                [[sg.T("Επέλεξε μία Διδασκαλία.")],
+                                  [sg.B('OK')]],size=(300,70)).read(close=True)
+                
+    else:
+        layout = [[sg.Table(values=data, headings=headings,
+                            justification='center',
+                            num_rows=15,
+                            key='-TABLE-',
+                            enable_events=True,
+                            enable_click_events=True)],
+                  [sg.Button("Exit", key="-exit-")]]
     windowdidaskalies = sg.Window("Μαθήματα που διδάχθηκαν", layout)
     while True:
         event, values = windowdidaskalies.read()
