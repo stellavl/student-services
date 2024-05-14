@@ -1,8 +1,6 @@
 import PySimpleGUI as sg
 import sqlite3
 
-#CHANGED NOW
-
 def main_window():
     layout = [[sg.Text("Choose user:", key="-user-")],
               [sg.Button("Φοιτητής",key="-foititis-"),
@@ -397,7 +395,7 @@ def window_didaskalias(user,etos):
     headings = ["Όνομα", "Κωδικός Μαθήματος"]
     if user==3:
         layout = [[sg.Text("Επέλεξε μία διδασκαλία για να την επεξεργαστείς:"),
-            ,sg.Table(values=data, headings=headings,
+            sg.Table(values=data, headings=headings,
                             justification='center',
                             num_rows=15,
                             key='-TABLE-',
@@ -1047,6 +1045,3 @@ def main():
  
 if __name__ == "__main__":
     main()
-
-
-
